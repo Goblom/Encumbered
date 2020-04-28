@@ -1,0 +1,8 @@
+main: codes.goblom.carryweight.CarryPlugin
+name: CarryWeight
+version: 1.0
+author: Goblom
+
+commands:
+    carryweight:
+        aliases: cw

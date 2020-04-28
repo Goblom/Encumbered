@@ -1,0 +1,42 @@
+# The Default max carry weight. 
+# Can be override per player with /carryweight setweight [player] [number]
+Default Max Carry Weight: 100
+
+# If true we account for stack size. 
+# If a stack has 10 items in it we get material weight * 10.
+Account for Amount: true
+
+# Change [CarryWeight] to [CW]
+Short Prefix: false
+
+# How often should we let the player know they are encumbered. (in minutes)
+Message Interval: 3
+
+# Let the player pickup items if the stack they are picking up exceeds their max
+# carry weight.
+Can Pickup Item if Exceed Max Carry: true
+
+# When the player is over encumbered
+Overencumbered:
+    # Fly Speed - When a player is flying. MC Default is 0.1
+    Fly Speed: 0.1
+    
+    # Walk Speed - When a player is walking. MC Default 0.2
+    Walk Speed: 0.2
+
+# If we want a player to have a custom carry weight. set with UUIDs
+# /carryweight setweight [player] [number]
+Override:
+    #Goblom
+    8b86e239-cc84-4638-b3fa-1f18457f96dd: 500
+
+
+# The weight of each material. Uses the Material enum. 
+# Supports Current Server Version. (EX: MOB_SPAWNER on 1.8 and SPAWNER on 1.9+)
+# 
+# Can be set with /carryweight setmaterial [material] [number]
+# 
+# Latest Material Enum:
+# https://hub.spigotmc.org/javadocs/spigot/org/bukkit/Material.html
+Material Weights:
+    DIAMOND_BLOCK: 10
