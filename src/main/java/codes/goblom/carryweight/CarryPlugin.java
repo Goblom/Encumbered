@@ -38,6 +38,8 @@ import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
 import org.bukkit.event.entity.EntityPickupItemEvent;
+import org.bukkit.event.inventory.InventoryDragEvent;
+import org.bukkit.event.inventory.InventoryOpenEvent;
 import org.bukkit.event.player.PlayerMoveEvent;
 import org.bukkit.event.player.PlayerQuitEvent;
 import org.bukkit.event.player.PlayerToggleSprintEvent;
@@ -98,6 +100,7 @@ public class CarryPlugin extends JavaPlugin implements Listener, Runnable {
         CarryWeight.accountAmount = getConfig().getBoolean("Account for Amount", CarryWeight.accountAmount);
         CarryWeight.defaultMaxCarryWeight = getConfig().getDouble("Default Max Carry Weight", CarryWeight.defaultMaxCarryWeight);
         CarryWeight.canPickupIfExceedMaxCarryWeight = getConfig().getBoolean("Can Pickup Item if Exceed Max Carry", CarryWeight.canPickupIfExceedMaxCarryWeight);
+        CarryWeight.weightedTooltip = getConfig().getBoolean("Show Weight in Tooltip", CarryWeight.weightedTooltip);
         
         for (String matName : getConfig().getConfigurationSection("Material Weights").getKeys(false)) {
             Material mat = Material.matchMaterial(matName);
@@ -206,6 +209,31 @@ public class CarryPlugin extends JavaPlugin implements Listener, Runnable {
         });
     }
     
+    @EventHandler
+    public void tooltipInvOpen(InventoryOpenEvent event) {
+        if (!CarryWeight.weightedTooltip) return;
+        
+        ItemStack[] contents = event.getInventory().getStorageContents();
+        
+        for (int i = 0; i < contents.length; i++) {
+            ItemStack content = contents[i];
+            
+            if (content == null) continue;
+            
+            content = CarryWeight.addWeightTooltip(content);
+            contents[i] = content;
+        }
+        
+        event.getInventory().setContents(contents);
+    }
+    
+    @EventHandler
+    public void tooltipInvDrag(InventoryDragEvent event) {
+        if (!CarryWeight.weightedTooltip) return;
+        
+        event.setCursor(CarryWeight.addWeightTooltip(event.getCursor()));
+    }
+    
     @EventHandler( priority = EventPriority.LOW )
     public void onItemPickup(EntityPickupItemEvent event) {
         if (event.isCancelled()) return;
@@ -225,6 +253,10 @@ public class CarryPlugin extends JavaPlugin implements Listener, Runnable {
             
             exec.sendMessage(player, "You are carrying too much. Please drop " + ((current + itemWeight) - max) + " weight.");
         }
+        
+        if (!CarryWeight.weightedTooltip) return;
+        
+        event.getItem().setItemStack(CarryWeight.addWeightTooltip(item));
     }
     
     @EventHandler( priority = EventPriority.LOW )

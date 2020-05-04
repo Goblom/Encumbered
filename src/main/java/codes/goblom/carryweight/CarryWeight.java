@@ -18,6 +18,7 @@ package codes.goblom.carryweight;
 
 import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -25,6 +26,7 @@ import java.util.UUID;
 import org.bukkit.Material;
 import org.bukkit.OfflinePlayer;
 import org.bukkit.inventory.ItemStack;
+import org.bukkit.inventory.meta.ItemMeta;
 
 /**
  *
@@ -35,12 +37,15 @@ public class CarryWeight {
     public static final float DEFAULT_FLY_SPEED = 0.1F;
     public static final float DEFAULT_WALK_SPEED = 0.2F;
     
-    protected static boolean accountAmount = false;
+    protected static boolean accountAmount = true;
     protected static double defaultMaxCarryWeight = 100.0;
     protected static boolean canPickupIfExceedMaxCarryWeight = true;
+    protected static boolean weightedTooltip = true;
     
     protected static final Map<Material, Double> MATERIAL_WEIGHTS = Maps.newHashMap();
     protected static final List<WeightedPlayer> WEIGHTED_PLAYERS = Lists.newArrayList();
+    
+    private static final String WEIGHT_STR = "Weight: ";
     
     public static WeightedPlayer getPlayer(OfflinePlayer player) {
         return getPlayer(player.getUniqueId());
@@ -85,5 +90,45 @@ public class CarryWeight {
         }
         
         return weight;
+    }
+    
+    public static ItemStack addWeightTooltip(ItemStack stack) {
+        if (!weightedTooltip) return stack;
+        
+        double weight = calculateWeight(stack);
+        
+        ItemMeta meta = stack.getItemMeta();
+        List<String> lore = meta.getLore();
+        boolean added = false;
+        
+        if (lore != null) {
+            for (int i = 0; i < lore.size(); i++) {
+                String line = lore.get(i);
+                
+                if (line == null || line.isEmpty()) continue;
+                
+                if (line.startsWith(WEIGHT_STR)) {
+                    added = true;
+                    lore.set(i, WEIGHT_STR + weight);
+                    break;
+                }
+            }
+        } else {
+            lore = new ArrayList();
+            
+            int spacing = 1;
+            for (int i = 0; i < spacing; i++) {
+                lore.add("");
+            }
+        }
+        
+        if (!added) {
+            lore.add(WEIGHT_STR + weight);
+        }
+        
+        meta.setLore(lore);
+        stack.setItemMeta(meta);
+        
+        return stack;
     }
 }
