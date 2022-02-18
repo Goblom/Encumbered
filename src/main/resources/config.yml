@@ -1,5 +1,5 @@
 # The Default max carry weight. 
-# Can be override per player with /carryweight setweight [player] [number]
+# Can be override per player with /encumbered setweight [player] [number]
 Default Max Carry Weight: 100
 
 # If true we account for stack size. 
@@ -31,7 +31,7 @@ Overencumbered:
 ##### Moved to overrides.yml #####
 ##################################
 # If we want a player to have a custom carry weight. set with UUIDs
-# /carryweight setweight [player] [number]
+# /encumbered setcarriedweight [player] [number]
 #Override:
 #    #Goblom
 #    8b86e239-cc84-4638-b3fa-1f18457f96dd: 500
@@ -43,7 +43,7 @@ Overencumbered:
 # The weight of each material. Uses the Material enum. 
 # Supports Current Server Version. (EX: MOB_SPAWNER on 1.8 and SPAWNER on 1.9+)
 # 
-# Can be set with /carryweight setmaterial [material] [number]
+# Can be set with /encumbered setmaterial [material] [number]
 # 
 # Latest Material Enum:
 # https://hub.spigotmc.org/javadocs/spigot/org/bukkit/Material.html

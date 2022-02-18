@@ -14,7 +14,7 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-package codes.goblom.carryweight;
+package codes.goblom.encumbered;
 
 import codes.goblom.executor.CommandContext;
 import codes.goblom.executor.CommandInfo;
@@ -34,9 +34,9 @@ import org.bukkit.entity.Player;
  *
  * @author Bryan Larson
  */
-class CarryCommands implements CommandListener {    
+class EncumberedCommands implements CommandListener {    
     
-    protected CarryCommands() { }
+    protected EncumberedCommands() { }
     
     @CommandInfo(
             name = "reset",
@@ -47,9 +47,9 @@ class CarryCommands implements CommandListener {
     public void reset(CommandContext context) {
         if (context.isTabExecutor()) return;
         
-        CarryPlugin.instance.saveResource("config.yml", true);
-        CarryPlugin.instance.saveResource("overrides.yml", true);
-        CarryPlugin.instance.saveResource("weights.yml", true);
+        EncumberedPlugin.instance.saveResource("config.yml", true);
+        EncumberedPlugin.instance.saveResource("overrides.yml", true);
+        EncumberedPlugin.instance.saveResource("weights.yml", true);
         context.message("Configs reset back to default values", "Please restart you server.");
     }
     
@@ -95,7 +95,7 @@ class CarryCommands implements CommandListener {
         
         if (context.isTabExecutor()) return;
         
-        context.message("The Carried Weight of " + player.getName() + " is " + CarryWeight.getPlayer(player).calculateCarryWeight());
+        context.message("The carried weight of " + player.getName() + " is " + Encumbered.getPlayer(player).calculateCarriedWeight());
     }
     
     @CommandInfo(
@@ -165,15 +165,15 @@ class CarryCommands implements CommandListener {
         
         if (context.isTabExecutor()) return;
         
-        CarryWeight.setMaterialWeight(mat, weight);
+        Encumbered.setMaterialWeight(mat, weight);
         context.message("Changed weight of " + mat.name() + " to " + weight);
     }
     
         @CommandInfo(
-            name = "setcarry",
-            alias = "sc",
-            description = "Set the max carry weight of a player",
-            permission = Permissions.SET_CARRY,
+            name = "setcarriedweight",
+            alias = { "scw", "sc", "sw" },
+            description = "Set the max carried weight of a player",
+            permission = Permissions.SET_CARRIED_WEIGHT,
             usage = "[player] [weight]"
     )
     public void setCarry(CommandContext context) {
@@ -235,7 +235,7 @@ class CarryCommands implements CommandListener {
         
         if (context.isTabExecutor()) return;
         
-        CarryWeight.getPlayer(player).setCustomMaxCarryWeight(weight);
+        Encumbered.getPlayer(player).setCustomMaxCarryWeight(weight);
         context.message("Set the Max Carry Weight of " + player.getName() + " to " + weight);
     }
 }

@@ -1,7 +1,7 @@
 # The weight of each material. Uses the Material enum. 
 # Supports Current Server Version. (EX: MOB_SPAWNER on 1.8 and SPAWNER on 1.9+)
 # 
-# Can be set with /carryweight setmaterial [material] [number]
+# Can be set with /encumbered setmaterial [material] [number]
 # 
 # Latest Material Enum:
 # https://hub.spigotmc.org/javadocs/spigot/org/bukkit/Material.html

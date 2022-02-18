@@ -1,8 +1,8 @@
-main: codes.goblom.carryweight.CarryPlugin
-name: CarryWeight
-version: 1.0
+main: codes.goblom.encumbered.EncumberedPlugin
+name: Encumbered
+version: 2.0
 author: Goblom
 
 commands:
-    carryweight:
-        aliases: cw
+    encumbered:
+        aliases: en

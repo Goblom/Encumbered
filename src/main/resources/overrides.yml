@@ -1,5 +1,5 @@
 # If we want a player to have a custom carry weight. set with UUIDs
-# /carryweight setweight [player] [number]
+# /encumbered setweight [player] [number]
 
 #Goblom
 8b86e239-cc84-4638-b3fa-1f18457f96dd: 500
