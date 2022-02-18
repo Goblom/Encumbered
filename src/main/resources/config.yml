@@ -6,7 +6,7 @@ Default Max Carry Weight: 100
 # If a stack has 10 items in it we get material weight * 10.
 Account for Amount: true
 
-# Change [CarryWeight] to [CW]
+# Change [Encumbered] to [E]
 Short Prefix: false
 
 # How often should we let the player know they are encumbered. (in minutes)
@@ -20,7 +20,7 @@ Can Pickup Item if Exceed Max Carry: true
 Show Weight in Tooltip: true
 
 # When the player is over encumbered
-Overencumbered:
+Over Encumbered:
     # Fly Speed - When a player is flying. MC Default is 0.1
     Fly Speed: 0.1
     

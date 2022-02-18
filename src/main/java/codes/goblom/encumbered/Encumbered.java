@@ -36,6 +36,9 @@ import org.bukkit.inventory.meta.ItemMeta;
  */
 public class Encumbered {
     
+    /**
+     * Taken from default server values for new players
+     */
     public static final float DEFAULT_FLY_SPEED = 0.1F;
     public static final float DEFAULT_WALK_SPEED = 0.2F;
     
@@ -45,7 +48,7 @@ public class Encumbered {
     protected static boolean weightedTooltip = true;
     
     protected static final Map<Material, Double> MATERIAL_WEIGHTS = Maps.newHashMap();
-    protected static final List<EncumberedPlayer> WEIGHTED_PLAYERS = Lists.newArrayList();
+    protected static final List<EncumberedPlayer> ENCUMBERED_PLAYERS = Lists.newArrayList();
     
     private static final String WEIGHT_STR = "Weight: ";
     
@@ -54,9 +57,9 @@ public class Encumbered {
     }
     
     public static EncumberedPlayer getPlayer(UUID id) {
-        return WEIGHTED_PLAYERS.stream().filter((p) -> { return p.getUuid().equals(id); }).findFirst().orElseGet(() -> {
+        return ENCUMBERED_PLAYERS.stream().filter((p) -> { return p.getUuid().equals(id); }).findFirst().orElseGet(() -> {
             EncumberedPlayer player = new EncumberedPlayer(id);
-            WEIGHTED_PLAYERS.add(player);
+            ENCUMBERED_PLAYERS.add(player);
             
             return player;
         });

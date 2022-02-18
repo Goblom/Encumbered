@@ -115,7 +115,7 @@ public class EncumberedPlayer {
     
     /**
      * 
-     * @return True of player has carryweight.bypass or is in CREATIVE. false if player is offline or does not have requirements
+     * @return True of player has encumbered.bypass or is in CREATIVE. false if player is offline or does not have requirements
      */
     public boolean canBypass() {
         if (isOnline()) {

@@ -16,6 +16,7 @@
  */
 package codes.goblom.encumbered;
 
+import codes.goblom.encumbered.events.EncumberedSpeedChangeEvent;
 import codes.goblom.executor.CommandContext;
 import codes.goblom.executor.CommandInfo;
 import codes.goblom.executor.Executor;
@@ -99,11 +100,11 @@ public class EncumberedPlugin extends JavaPlugin implements Listener, Runnable {
                 .removalListener((RemovalNotification<UUID, Long> notif) -> {
                     UUID id = notif.getKey();
                     
-                    EncumberedPlayer wp = Encumbered.getPlayer(id);
-                    double current = wp.calculateCarriedWeight();
-                    double max = wp.getMaxCarryWeight();
+                    EncumberedPlayer ep = Encumbered.getPlayer(id);
+                    double current = ep.calculateCarriedWeight();
+                    double max = ep.getMaxCarryWeight();
                     
-                    if (wp.canBypass() || current < max) {
+                    if (ep.canBypass() || current < max) {
                         Player player = Bukkit.getPlayer(id);
                         
                         if (player == null) return;
@@ -195,7 +196,7 @@ public class EncumberedPlugin extends JavaPlugin implements Listener, Runnable {
     @Override
     public void onDisable() {
         Encumbered.MATERIAL_WEIGHTS.clear();
-        Encumbered.WEIGHTED_PLAYERS.clear();
+        Encumbered.ENCUMBERED_PLAYERS.clear();
     }
     
     @Override
@@ -203,12 +204,12 @@ public class EncumberedPlugin extends JavaPlugin implements Listener, Runnable {
         Collection<? extends Player> snapshot = Bukkit.getOnlinePlayers();
         
         snapshot.forEach((player) -> {
-            EncumberedPlayer wp = Encumbered.getPlayer(player);
+            EncumberedPlayer ep = Encumbered.getPlayer(player);
             
-            if (wp.canBypass()) return;
+            if (ep.canBypass()) return;
             
-            double current = wp.calculateCarriedWeight();
-            double max = wp.getMaxCarryWeight();
+            double current = ep.calculateCarriedWeight();
+            double max = ep.getMaxCarryWeight();
             
             if (current >= max) {
                 if (messageQueue.getIfPresent(player.getUniqueId()) == null) {
@@ -216,9 +217,19 @@ public class EncumberedPlugin extends JavaPlugin implements Listener, Runnable {
                     exec.sendMessage(player, "You are over encumbered. Drop a few items to speed up.");
                 }
                 
-                player.setFlySpeed((float) getConfig().getDouble("Overencumbered.Fly Speed", 0.1));
-                player.setWalkSpeed((float) getConfig().getDouble("Overencumbered.Walk Speed", 0.2));
+                float flySpeed = (float) getConfig().getDouble("Over Encumbered.Fly Speed", Encumbered.DEFAULT_FLY_SPEED);
+                float walkSpeed = (float) getConfig().getDouble("Over Encumbered.Fly Speed", Encumbered.DEFAULT_WALK_SPEED);
+                
+                EncumberedSpeedChangeEvent flyChange = new EncumberedSpeedChangeEvent(ep, flySpeed, EncumberedSpeedChangeEvent.SpeedType.FLY);
+                EncumberedSpeedChangeEvent walkChange = new EncumberedSpeedChangeEvent(ep, walkSpeed, EncumberedSpeedChangeEvent.SpeedType.WALK);
+                
+                Bukkit.getPluginManager().callEvent(flyChange);
+                Bukkit.getPluginManager().callEvent(walkChange);
+                
+                player.setFlySpeed(flyChange.getToSpeed());
+                player.setWalkSpeed(walkChange.getToSpeed());
             } else if (messageQueue.getIfPresent(player.getUniqueId()) != null) {
+                Bukkit.getPluginManager().callEvent(new EncumberedSpeedChangeEvent(ep, EncumberedSpeedChangeEvent.SpeedType.RESET));
                 player.setWalkSpeed(Encumbered.DEFAULT_WALK_SPEED);
                 player.setFlySpeed(Encumbered.DEFAULT_FLY_SPEED);
                 messageQueue.invalidate(player.getUniqueId());
