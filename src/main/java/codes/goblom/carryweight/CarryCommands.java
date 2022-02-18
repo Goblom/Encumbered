@@ -48,7 +48,9 @@ class CarryCommands implements CommandListener {
         if (context.isTabExecutor()) return;
         
         CarryPlugin.instance.saveResource("config.yml", true);
-        context.message("Config reset back to default values", "Please restart you server.");
+        CarryPlugin.instance.saveResource("overrides.yml", true);
+        CarryPlugin.instance.saveResource("weights.yml", true);
+        context.message("Configs reset back to default values", "Please restart you server.");
     }
     
     @CommandInfo(
