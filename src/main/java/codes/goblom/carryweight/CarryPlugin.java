@@ -23,6 +23,7 @@ import com.google.common.cache.Cache;
 import com.google.common.cache.CacheBuilder;
 import com.google.common.cache.RemovalNotification;
 import com.google.common.collect.Lists;
+import java.io.File;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.List;
@@ -33,6 +34,8 @@ import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.command.CommandSender;
 import org.bukkit.command.PluginCommand;
+import org.bukkit.configuration.file.FileConfiguration;
+import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
@@ -65,14 +68,28 @@ public class CarryPlugin extends JavaPlugin implements Listener, Runnable {
     private Executor exec;
     private Cache<UUID, Long> messageQueue;
     
+    protected File weightsFile;
+    protected File overridesFile;
+    protected FileConfiguration weights;
+    protected FileConfiguration overrides;
+    
     @Override
     public void onLoad() {        
         instance = this;
+        
+        this.weightsFile = new File(this.getDataFolder(), "weights.yml");
+        this.overridesFile = new File(getDataFolder(), "overrides.yml");
     }
     
     @Override
     public void onEnable() {
         saveDefaultConfig();
+        
+        if (!weightsFile.exists()) saveResource("weights.yml", true);
+        if (!overridesFile.exists()) saveResource("overrides.yml", true);
+        
+        this.weights = YamlConfiguration.loadConfiguration(weightsFile);
+        this.overrides = YamlConfiguration.loadConfiguration(overridesFile);
         
         debug = getConfig().getBoolean("Debug", debug);
         
@@ -102,9 +119,9 @@ public class CarryPlugin extends JavaPlugin implements Listener, Runnable {
         CarryWeight.canPickupIfExceedMaxCarryWeight = getConfig().getBoolean("Can Pickup Item if Exceed Max Carry", CarryWeight.canPickupIfExceedMaxCarryWeight);
         CarryWeight.weightedTooltip = getConfig().getBoolean("Show Weight in Tooltip", CarryWeight.weightedTooltip);
         
-        for (String matName : getConfig().getConfigurationSection("Material Weights").getKeys(false)) {
+        for (String matName : weights.getKeys(false)) {
             Material mat = Material.matchMaterial(matName);
-            double weight = getConfig().getDouble("Material Weights." + matName);
+            double weight = weights.getDouble(matName);
             
             if (mat == null) {
                 getLogger().warning("Material '" + matName + "' doesn't seem to exist... Skipping...");

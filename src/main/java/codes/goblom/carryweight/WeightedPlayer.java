@@ -16,7 +16,9 @@
  */
 package codes.goblom.carryweight;
 
+import java.io.IOException;
 import java.util.UUID;
+import java.util.logging.Level;
 import lombok.Getter;
 import org.bukkit.Bukkit;
 import org.bukkit.GameMode;
@@ -39,14 +41,18 @@ public class WeightedPlayer {
     protected WeightedPlayer(UUID id) {
         this.uuid = id;
         
-        this.maxCarryWeight = CarryPlugin.instance.getConfig().getDouble("Override." + uuid, CarryWeight.defaultMaxCarryWeight);
+        this.maxCarryWeight = CarryPlugin.instance.overrides.getDouble(uuid.toString(), CarryWeight.defaultMaxCarryWeight);
     }
     
     public void setCustomMaxCarryWeight(double amount) {
         this.maxCarryWeight = amount;
         
-        CarryPlugin.instance.getConfig().set("Override." + uuid, amount);
-        CarryPlugin.instance.saveConfig();
+        CarryPlugin.instance.overrides.set(uuid.toString(), amount);
+        try {
+            CarryPlugin.instance.overrides.save(CarryPlugin.instance.overridesFile);
+        } catch (IOException ex) {
+            CarryPlugin.instance.getLogger().log(Level.WARNING, "Unable to save overrides.yml. Error: {0}", ex);
+        }
     }
     
     private boolean isOnline() {

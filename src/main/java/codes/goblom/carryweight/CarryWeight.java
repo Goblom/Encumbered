@@ -18,11 +18,13 @@ package codes.goblom.carryweight;
 
 import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.UUID;
+import java.util.logging.Level;
 import org.bukkit.Material;
 import org.bukkit.OfflinePlayer;
 import org.bukkit.inventory.ItemStack;
@@ -76,8 +78,13 @@ public class CarryWeight {
         if (mat.isAir()) throw new UnsupportedOperationException(mat.name() + " is not a supported Material");
         
         MATERIAL_WEIGHTS.put(mat, amount);
-        CarryPlugin.instance.getConfig().set("Material Weights." + mat.name(), amount);
-        CarryPlugin.instance.saveConfig();
+        CarryPlugin.instance.weights.set(mat.name(), amount);
+        
+        try {
+            CarryPlugin.instance.weights.save(CarryPlugin.instance.weightsFile);
+        } catch (IOException ex) {
+            CarryPlugin.instance.getLogger().log(Level.WARNING, "Unable to save weights.yml. Error: {0}", ex);
+        }
     }
     
     public static double calculateWeight(ItemStack stack) {

@@ -27,13 +27,19 @@ Overencumbered:
     # Walk Speed - When a player is walking. MC Default 0.2
     Walk Speed: 0.2
 
+##################################
+##### Moved to overrides.yml #####
+##################################
 # If we want a player to have a custom carry weight. set with UUIDs
 # /carryweight setweight [player] [number]
-Override:
-    #Goblom
-    8b86e239-cc84-4638-b3fa-1f18457f96dd: 500
+#Override:
+#    #Goblom
+#    8b86e239-cc84-4638-b3fa-1f18457f96dd: 500
 
 
+##################################
+##### Moved to weights.yml #####
+##################################
 # The weight of each material. Uses the Material enum. 
 # Supports Current Server Version. (EX: MOB_SPAWNER on 1.8 and SPAWNER on 1.9+)
 # 
@@ -41,5 +47,5 @@ Override:
 # 
 # Latest Material Enum:
 # https://hub.spigotmc.org/javadocs/spigot/org/bukkit/Material.html
-Material Weights:
-    DIAMOND_BLOCK: 10
+#Material Weights:
+#    DIAMOND_BLOCK: 10
