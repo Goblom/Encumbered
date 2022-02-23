@@ -119,6 +119,7 @@ public class EncumberedPlugin extends JavaPlugin implements Listener, Runnable {
         Encumbered.defaultMaxCarryWeight = getConfig().getDouble("Default Max Carry Weight", Encumbered.defaultMaxCarryWeight);
         Encumbered.canPickupIfExceedMaxCarryWeight = getConfig().getBoolean("Can Pickup Item if Exceed Max Carry", Encumbered.canPickupIfExceedMaxCarryWeight);
         Encumbered.weightedTooltip = getConfig().getBoolean("Show Weight in Tooltip", Encumbered.weightedTooltip);
+        Encumbered.countBundle = getConfig().getBoolean("Count Bundle", Encumbered.countBundle);
         
         for (String matName : weights.getKeys(false)) {
             Material mat = Material.matchMaterial(matName);
@@ -131,6 +132,11 @@ public class EncumberedPlugin extends JavaPlugin implements Listener, Runnable {
             
             if (mat.isAir()) {
                 getLogger().warning("Found AIR type material in Material Weights... Skipping...");
+                continue;
+            }
+            
+            if (mat == Material.BUNDLE && Encumbered.countBundle) {
+                getLogger().warning("Found BUNDLE material. You also have 'Count Bundle' as true. Skipping...");
                 continue;
             }
             

@@ -16,6 +16,9 @@ Message Interval: 3
 # carry weight.
 Can Pickup Item if Exceed Max Carry: true
 
+# Count all items in bundle towards carried weight
+Count Bundle: true
+
 # Shows the items weight if one exists in the Items Lore
 Show Weight in Tooltip: true
 

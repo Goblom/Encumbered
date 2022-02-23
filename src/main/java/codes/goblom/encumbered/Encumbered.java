@@ -28,6 +28,7 @@ import java.util.logging.Level;
 import org.bukkit.Material;
 import org.bukkit.OfflinePlayer;
 import org.bukkit.inventory.ItemStack;
+import org.bukkit.inventory.meta.BundleMeta;
 import org.bukkit.inventory.meta.ItemMeta;
 
 /**
@@ -46,6 +47,7 @@ public class Encumbered {
     protected static double defaultMaxCarryWeight = 100.0;
     protected static boolean canPickupIfExceedMaxCarryWeight = true;
     protected static boolean weightedTooltip = true;
+    protected static boolean countBundle = true;
     
     protected static final Map<Material, Double> MATERIAL_WEIGHTS = Maps.newHashMap();
     protected static final List<EncumberedPlayer> ENCUMBERED_PLAYERS = Lists.newArrayList();
@@ -79,6 +81,7 @@ public class Encumbered {
     
     public static void setMaterialWeight(Material mat, double amount) {
         if (mat.isAir()) throw new UnsupportedOperationException(mat.name() + " is not a supported Material");
+        if (mat == Material.BUNDLE && Encumbered.countBundle) throw new UnsupportedOperationException("Will not add a BUNDLE weight. 'Count Bundle' is true.");
         
         MATERIAL_WEIGHTS.put(mat, amount);
         EncumberedPlugin.instance.weights.set(mat.name(), amount);
@@ -93,13 +96,26 @@ public class Encumbered {
     public static double calculateWeight(ItemStack stack) {
         if (stack == null) return 0.0;
         
-        double weight = getMaterialWeight(stack.getType());
-        
-        if (accountAmount) {
-            weight *= stack.getAmount();
+        if (stack.getType() == Material.BUNDLE && Encumbered.countBundle) {
+            double weight = 0.0;
+            
+            BundleMeta meta = (BundleMeta) stack.getItemMeta();
+            if (meta == null || !meta.hasItems()) return weight;
+            
+            for (ItemStack item : meta.getItems()) {
+                weight = calculateWeight(item);
+            }
+            
+            return weight;
+        } else {
+            double weight = getMaterialWeight(stack.getType());
+
+            if (accountAmount) {
+                weight *= stack.getAmount();
+            }
+
+            return weight;
         }
-        
-        return weight;
     }
     
     public static ItemStack addWeightTooltip(ItemStack stack) {

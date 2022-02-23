@@ -169,7 +169,7 @@ class EncumberedCommands implements CommandListener {
         context.message("Changed weight of " + mat.name() + " to " + weight);
     }
     
-        @CommandInfo(
+    @CommandInfo(
             name = "setcarriedweight",
             alias = { "scw", "sc", "sw" },
             description = "Set the max carried weight of a player",

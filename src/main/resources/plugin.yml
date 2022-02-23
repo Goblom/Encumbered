@@ -1,6 +1,6 @@
 main: codes.goblom.encumbered.EncumberedPlugin
 name: Encumbered
-version: 2.0
+version: 2.1
 author: Goblom
 
 commands:
